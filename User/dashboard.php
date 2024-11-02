@@ -94,7 +94,7 @@ $activePage = 'dashboard';
               <span>
                         <iconify-icon icon="mdi:calendar" class="fs-6"></iconify-icon>
                     </span>
-                  <span class="hide-menu">Events Schedule</span>
+                  <span class="hide-menu">Scheduled Events</span>
               </a>
           </li>
 
