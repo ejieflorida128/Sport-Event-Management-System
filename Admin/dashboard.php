@@ -61,7 +61,7 @@ $activePage = 'dashboard';
      
         <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
           <ul id="sidebarnav">
-            <li class="nav-small-cap">
+            <li class="nav-small-cap" style = "color: grey; font-size: 15px; font-weight: bolder;">
               <i class="ti ti-dots nav-small-cap-icon fs-6"></i>
               <span class="hide-menu">Menu</span>
             </li>
@@ -74,45 +74,29 @@ $activePage = 'dashboard';
                 </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link <?php echo $activePage == 'profile' ? 'active' : ''; ?>" href="profile.php" aria-expanded="false">
-                <span>
-                  <iconify-icon icon="solar:user-plus-rounded-bold-duotone" class="fs-6"></iconify-icon>
-                </span>
-                <span class="hide-menu">Profile</span>
-              </a>
+                <a class="sidebar-link <?php echo $activePage == 'profile' ? 'active' : ''; ?>" href="profile.php" aria-expanded="false">
+                    <span>
+                        <iconify-icon icon="solar:user-plus-rounded-bold-duotone" class="fs-6"></iconify-icon>
+                    </span>
+                    <span class="hide-menu">Profile</span>
+                </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link <?php echo $activePage == 'buttons' ? 'active' : ''; ?>" href="./ui-buttons.html" aria-expanded="false">
-                <span>
-                  <iconify-icon icon="solar:layers-minimalistic-bold-duotone" class="fs-6"></iconify-icon>
-                </span>
-                <span class="hide-menu">Buttons</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link <?php echo $activePage == 'alerts' ? 'active' : ''; ?>" href="./ui-alerts.html" aria-expanded="false">
-                <span>
-                  <iconify-icon icon="solar:danger-circle-bold-duotone" class="fs-6"></iconify-icon>
-                </span>
-                <span class="hide-menu">Alerts</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link <?php echo $activePage == 'dashboard' ? 'cards' : ''; ?>" href="./ui-card.html" aria-expanded="false">
-                <span>
-                  <iconify-icon icon="solar:bookmark-square-minimalistic-bold-duotone" class="fs-6"></iconify-icon>
-                </span>
-                <span class="hide-menu">Card</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link <?php echo $activePage == 'forms' ? 'active' : ''; ?>" href="./ui-forms.html" aria-expanded="false">
-                <span>
-                  <iconify-icon icon="solar:file-text-bold-duotone" class="fs-6"></iconify-icon>
-                </span>
-                <span class="hide-menu">Forms</span>
-              </a>
-            </li>
+                <a class="sidebar-link <?php echo $activePage == 'event' ? 'active' : ''; ?>" href="event.php" aria-expanded="false">
+                    <span>
+                        <iconify-icon icon="mdi:calendar" class="fs-6"></iconify-icon>
+                    </span>
+                    <span class="hide-menu">My Events</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link <?php echo $activePage == 'score' ? 'active' : ''; ?>" href="score.php" aria-expanded="false">
+                        <span>
+                            <iconify-icon icon="mdi:trophy" class="fs-6"></iconify-icon>
+                        </span>
+                        <span class="hide-menu">Score Events</span>
+                    </a>
+                </li>
 
           </ul>
        
@@ -160,12 +144,12 @@ $activePage = 'dashboard';
                   <img src="<?php 
                         echo $_SESSION['profile_picture'];
                   ?>" alt="" width="35" height="35" class="rounded-circle" style = "border: 1px solid black; padding: 2px;">
-                    <span style = "margin-left: 10px; font-weight: bolder;">Admin</span>
+                 
               
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
                   <div class="message-body">
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                    <a href="profile.php" class="d-flex align-items-center gap-2 dropdown-item">
                       <i class="ti ti-user fs-6"></i>
                       <p class="mb-0 fs-3">My Profile</p>
                     </a>
@@ -188,7 +172,7 @@ $activePage = 'dashboard';
               <img src="template/src/assets/images/backgrounds/1.avif" alt="image" class="img-fluid" width="205">
               <h4 class="mt-7">Event Management Tips!</h4>
                 <p class="card-subtitle mt-2 mb-3">Maximize your productivity and stay organized with these essential tips for managing sports events.</p>
-                <button class="btn btn-primary mb-3">View Event Schedules</button>
+                <a href="event.php" class = "btn btn-primary">View Events</a>
 
             </div>
           </div>
@@ -200,14 +184,49 @@ $activePage = 'dashboard';
               
               <div class="container">
                 <div class="row">
-                    <div class="con1">Content 1</div>
-                    <div class="con2">Content 2</div>
-                    <div class="con3">Content 3</div>
-                </div>
+                    <div class="con1">
+                        <p>Admin Account</p>
+                        <h3><?php
+                        
+                        $sql = "SELECT * FROM accounts WHERE type = 'Admin'";
+                        $query = mysqli_query($conn,$sql);
+                        echo mysqli_num_rows($query);
+                        
+                        ?></h3>
+                    </div>
+                    <div class="con2">
+                    <p>User Account</p>
+                        <h3><?php
+                        
+                        $sql = "SELECT * FROM accounts WHERE type = 'User'";
+                        $query = mysqli_query($conn,$sql);
+                        echo mysqli_num_rows($query);
+                        
+                        ?></h3>
+                    </div>
+              </div>
                 <div class="row">
-                    <div class="con1">Content 4</div>
-                    <div class="con2">Content 5</div>
-                    <div class="con3">Content 6</div>
+                   
+                <div class="con1">
+                        <p>Registered Event</p>
+                        <h3><?php
+                        
+                        $sql = "SELECT * FROM event";
+                        $query = mysqli_query($conn,$sql);
+                        echo mysqli_num_rows($query);
+                        
+                        ?></h3>
+                    </div>
+                    <div class="con2">
+                    <p>Scored Event</p>
+                        <h3><?php
+                        
+                        $sql = "SELECT * FROM event WHERE status = 'score'";
+                        $query = mysqli_query($conn,$sql);
+                        echo mysqli_num_rows($query);
+                        
+                        ?></h3>
+                    </div>
                 </div>
             </div>
 
@@ -260,6 +279,70 @@ $activePage = 'dashboard';
       </div>
     </div>
   </div>
+
+
+  <div id="preloader">
+					  <div class="loader" id="loader-1"></div>
+					</div>
+					
+			
+					<script>
+				
+					  setTimeout(function() {
+					    document.getElementById("preloader").style.display = "none";
+					  }, 2000);
+					</script>
+
+          
+          <style>
+                  #preloader {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background-color: #fff;
+                        z-index: 9999999; }
+                      
+                      .loader {
+                        top: 50%;
+                        width: 50px;
+                        height: 50px;
+                        border-radius: 100%;
+                        position: relative;
+                        margin: 0 auto; }
+                      
+                      #loader-1:before, #loader-1:after {
+                        content: "";
+                        position: absolute;
+                        top: -10px;
+                        left: -10px;
+                        width: 100%;
+                        height: 100%;
+                        border-radius: 100%;
+                        border: 7px solid transparent;
+                        border-top-color: #3c9cfd; }
+                      
+                      #loader-1:before {
+                        z-index: 100;
+                        animation: spin 2s infinite; }
+                      
+                      #loader-1:after {
+                        border: 7px solid #fafafa; }
+                      
+                      @keyframes spin {
+                        0% {
+                          -webkit-transform: rotate(0deg);
+                          -ms-transform: rotate(0deg);
+                          -o-transform: rotate(0deg);
+                          transform: rotate(0deg); }
+                        100% {
+                          -webkit-transform: rotate(360deg);
+                          -ms-transform: rotate(360deg);
+                          -o-transform: rotate(360deg);
+                          transform: rotate(360deg); } }
+
+          </style>
   <script src="template/src/assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="template/src/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="template/src/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
