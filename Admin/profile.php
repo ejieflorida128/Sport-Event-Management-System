@@ -144,6 +144,14 @@ $activePage = 'profile';
                         <span class="hide-menu">Score Events</span>
                     </a>
                 </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link <?php echo $activePage == 'report' ? 'active' : ''; ?>" href="reports.php" aria-expanded="false">
+                        <span>
+                            <iconify-icon icon="mdi:clipboard-text" class="fs-6"></iconify-icon>
+                        </span>
+                        <span class="hide-menu">Reports</span>
+                    </a>
+                </li>
 
           </ul>
        

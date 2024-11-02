@@ -1,33 +1,32 @@
 <?php
 session_start(); 
 include("../conn.php");
-$activePage = 'score'; 
+$activePage = 'report'; 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  $match_id = $_POST['match_id']; 
+ 
   if (isset($_POST['action'])) {
-      if ($_POST['action'] === 'score') {
-          $score_team1 = $_POST['score_team1'];
-          $score_team2 = $_POST['score_team2'];
+      
+    if ($_POST['action'] === 'report') {
+
+        $match_id = $_POST['match_id']; 
 
 
-
-            $sqlUpdateScore = "UPDATE event SET team1_score = '$score_team1', team2_score = '$score_team2',status = 'score' WHERE id  = $match_id";
-            mysqli_query($conn,$sqlUpdateScore);
-
-            header("Location: score.php");
-
-
-       
-      } elseif ($_POST['action'] === 'edit') {
+        $game_type = $_POST['game_type'];
           $edit_team1_name = $_POST['edit_team1_name'];
           $edit_team2_name = $_POST['edit_team2_name'];
           $edit_schedule = $_POST['edit_schedule'];
 
-          $sqlUpdateInfo = "UPDATE event SET team1_name = '$edit_team1_name', team2_name = '$edit_team2_name', schedule = 'edit_schedule' WHERE id  = $match_id";
+          $sqlUpdateInfo = "UPDATE event SET team1_name = '$edit_team1_name', team2_name = '$edit_team2_name', schedule = '$edit_schedule', game_type = '$game_type',status = 'game' WHERE id  = $match_id";
           mysqli_query($conn,$sqlUpdateInfo);
 
-          header("Location: score.php");
+          $sqlDeleteFromReport = "DELETE FROM report WHERE event_report_id = $match_id";
+          mysqli_query($conn,$sqlDeleteFromReport);
+
+          header("Location: reports.php");
+
+
+
         
       }
   }
@@ -211,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="row">
                                       <?php
                                           $uniqueId = $_SESSION['id'];
-                                          $sqlSelectAllEventBasedOnAdmin = "SELECT * FROM event WHERE admin_id = $uniqueId AND status = 'game'";
+                                          $sqlSelectAllEventBasedOnAdmin = "SELECT * FROM event WHERE admin_id = $uniqueId AND status = 'report'";
                                           $querySelectAllEventBasedOnAdmin = mysqli_query($conn, $sqlSelectAllEventBasedOnAdmin);
 
                                           if (mysqli_num_rows($querySelectAllEventBasedOnAdmin) > 0) {
@@ -243,10 +242,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                               <p style="color: grey; font-weight: bolder; font-size: 13px; margin-top: -15px;"><?php echo $getResult['team1_name']; ?> <span style="color: orange; font-size: 16px;">VS</span> <?php echo $getResult['team2_name']; ?></p>
                                                               
                                                               <div class="d-flex align-items-center gap-2">
-                                                                  <button type="button" class="btn btn-outline-primary" style="width: 130px;" data-bs-toggle="modal" data-bs-target="#scoreModal-<?php echo $getResult['id']; ?>">
-                                                                      Score
+                                                                  <button type="button" class="btn btn-outline-danger" style="width: 150px;" data-bs-toggle="modal" data-bs-target="#scoreModal-<?php echo $getResult['id']; ?>">
+                                                                      Show Report
                                                                   </button>
-                                                                  <button type="button" class="btn btn-outline-primary" style="width: 130px;" data-bs-toggle="modal" data-bs-target="#editModal-<?php echo $getResult['id']; ?>">
+                                                                  <button type="button" class="btn btn-outline-success" style="width: 90px;" data-bs-toggle="modal" data-bs-target="#editModal-<?php echo $getResult['id']; ?>">
                                                                       Edit
                                                                   </button>
                                                               </div>
@@ -255,33 +254,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                   </div>
 
                                                  
-                                                  <div class="modal fade" id="scoreModal-<?php echo $getResult['id']; ?>" tabindex="-1" aria-labelledby="scoreModalLabel" aria-hidden="true">
-                                                      <div class="modal-dialog">
-                                                          <div class="modal-content">
-                                                              <div class="modal-header">
-                                                                  <h1 class="modal-title fs-5" id="scoreModalLabel">Score Match</h1>
-                                                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                              </div>
-                                                              <div class="modal-body">
-                                                                  <form id="scoreForm-<?php echo $getResult['id']; ?>" action="score.php" method="post">
-                                                                      <input type="hidden" name="match_id" value="<?php echo $getResult['id']; ?>">
-                                                                      <div class="mb-3">
-                                                                          <label for="score_team1_<?php echo $getResult['id']; ?>" class="form-label">Team 1 Score</label>
-                                                                          <input type="number" class="form-control" id="score_team1_<?php echo $getResult['id']; ?>" value="<?php echo $getResult['team1_score']; ?>" name="score_team1" required>
-                                                                      </div>
-                                                                      <div class="mb-3">
-                                                                          <label for="score_team2_<?php echo $getResult['id']; ?>" class="form-label">Team 2 Score</label>
-                                                                          <input type="number" class="form-control" id="score_team2_<?php echo $getResult['id']; ?>" value="<?php echo $getResult['team2_score']; ?>" name="score_team2" required>
-                                                                      </div>
-                                                                      <div class="modal-footer">
-                                                                          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                                                                          <button type="submit" class="btn btn-success" name="action" value="score">Confirm Score</button>
-                                                                      </div>
-                                                                  </form>
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  </div>
+                                                  <div class="modal fade" id="scoreModal-<?php echo $getResult['id']; ?>" tabindex="-1" aria-labelledby="scoreModalLabel" aria-hidden="true" style = "margin-top:10%;">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h1 class="modal-title fs-5" id="scoreModalLabel">Report Log</h1>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <form id="scoreForm-<?php echo $getResult['id']; ?>" action="score.php" method="post">
+                                                                        <input type="hidden" name="match_id" value="<?php echo $getResult['id']; ?>">
+                                                                        <H4>Message:</H4><br>
+                                                                        <p style = "color: grey; font-weight: bolder;">
+                                                                            <?php 
+                                                                                $report_id = $getResult['id'];
+
+                                                                                $sqlGetReport = "SELECT message FROM report WHERE event_report_id = $report_id";
+                                                                                $resultQuery = mysqli_query($conn, $sqlGetReport);
+
+                                                                                $fetchValue = mysqli_fetch_assoc($resultQuery); // Corrected here
+
+                                                                                echo $fetchValue['message'];
+                                                                            ?>
+                                                                        </p>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
 
                                               
                                                   <div class="modal fade" id="editModal-<?php echo $getResult['id']; ?>" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -292,8 +296,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                               </div>
                                                               <div class="modal-body">
-                                                                  <form id="editForm-<?php echo $getResult['id']; ?>" action="score.php" method="post">
+                                                                  <form id="editForm-<?php echo $getResult['id']; ?>" action="reports.php" method="post">
                                                                       <input type="hidden" name="match_id" value="<?php echo $getResult['id']; ?>">
+                                                                      <div class="mb-3">
+                                                                          <label for="game_type<?php echo $getResult['id']; ?>" class="form-label">Game Type </label>
+                                                                          <input type="text" class="form-control" id="game_type<?php echo $getResult['id']; ?>" value="<?php echo $getResult['game_type']; ?>" name="game_type" required>
+                                                                      </div>
                                                                       <div class="mb-3">
                                                                           <label for="edit_team1_name_<?php echo $getResult['id']; ?>" class="form-label">Team 1 Name</label>
                                                                           <input type="text" class="form-control" id="edit_team1_name_<?php echo $getResult['id']; ?>" value="<?php echo $getResult['team1_name']; ?>" name="edit_team1_name" required>
@@ -308,7 +316,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                                       </div>
                                                                       <div class="modal-footer">
                                                                           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                                                                          <button type="submit" class="btn btn-success" name="action" value="edit">Save Changes</button>
+                                                                          <button type="submit" class="btn btn-success" name="action" value="report">Save Changes</button>
                                                                       </div>
                                                                   </form>
                                                               </div>
