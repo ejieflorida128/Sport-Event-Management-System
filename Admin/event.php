@@ -314,7 +314,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                                   <input type="number" class="form-control" id="score_team2_<?php echo $getResult['id']; ?>" value="<?php echo $getResult['team2_score']; ?>" name="score_team2" required disabled>
                                                               </div>
                                                               <div class="modal-footer">
-                                                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                                                               </div>
                                                           </form>
                                                       </div>
@@ -348,10 +348,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                       }
                                   } else {
                               ?>
-                                            <div class="col-12" style="background-color: red; color: white; padding: 20px; border-radius: 10px; text-align: center;">
-                                                <h4 style="color: white;">There are no available events or games.</h4>
-                                                <p>Please check back later or score a game in the " Score Event " selection in the sidebar.</p>
-                                            </div>
+                                           
+
+                                            <div class="col-12" style="background-color: #FF4545; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                              <div class="col-12" style="background-color: red; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                              <h4 style="color: white;">There are no available events or games.</h4>
+                                              <p>Please check back later or score a game in the " Score Event " selection in the sidebar.</p>
+                                              </div>
+
+                                              </div>
                               <?php
                                   }
                               ?>

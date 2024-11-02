@@ -119,22 +119,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <span class="hide-menu">Profile</span>
                 </a>
             </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link <?php echo $activePage == 'event' ? 'active' : ''; ?>" href="event.php" aria-expanded="false">
-                    <span>
-                        <iconify-icon icon="mdi:calendar" class="fs-6"></iconify-icon>
-                    </span>
-                    <span class="hide-menu">My Events</span>
-                    </a>
-                </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link <?php echo $activePage == 'score' ? 'active' : ''; ?>" href="score.php" aria-expanded="false">
-                        <span>
-                            <iconify-icon icon="mdi:trophy" class="fs-6"></iconify-icon>
+                  <a class="sidebar-link <?php echo $activePage == 'event' ? 'active' : ''; ?>" href="event.php" aria-expanded="false">
+                      <span>
+                          <iconify-icon icon="mdi:calendar-plus" class="fs-6"></iconify-icon>
+                      </span>
+                      <span class="hide-menu">Scored Events</span>
+                  </a>
+              </li>
+              <li class="sidebar-item">
+                  <a class="sidebar-link <?php echo $activePage == 'score' ? 'active' : ''; ?>" href="score.php" aria-expanded="false">
+                  <span>
+                            <iconify-icon icon="mdi:calendar" class="fs-6"></iconify-icon>
                         </span>
-                        <span class="hide-menu">Score Events</span>
-                    </a>
-                </li>
+                      <span class="hide-menu">Events Schedule</span>
+                  </a>
+              </li>
           </ul>
        
         </nav>
@@ -153,9 +153,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               </a>
             </li>
           
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" style = "width: 190px; ">
-            Add Event Schedule
-          </button>
+            <h2 class="dashboard-title">SCORED EVENT</h2>
+
+              <style>
+              .dashboard-title {
+                  font-weight: bolder;
+                  color: grey;
+                  letter-spacing: 2px;
+                  font-size: 30px;
+                  position: relative;
+                  top: 10px;
+              }
+
+              @media (max-width: 600px) { 
+                  .dashboard-title {
+                  display: none;
+                  }
+              }
+              </style>
         
 
           </ul>
@@ -191,54 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="row">
           
         <div class="col-lg-12">
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Match Details</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form id="matchForm" action = "event.php" method = "post" enctype="multipart/form-data">
-                            <div class="modal-body">
-                                <input type="hidden" id="admin_id" name="admin_id" value="<?php echo $_SESSION['id']; ?>">
-
-                                <div class="mb-3">
-                                    <label for="game_type" class="form-label">Game Type</label>
-                                    <input type="text" class="form-control" id="game_type" name="game_type" required>
-                                </div>
-
-
-                                <div class="mb-3">
-                                    <label for="team1_name" class="form-label">Team 1 Name</label>
-                                    <input type="text" class="form-control" id="team1_name" name="team1_name" required>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="team2_name" class="form-label">Team 2 Name</label>
-                                    <input type="text" class="form-control" id="team2_name" name="team2_name" required>
-                                </div>
-
-                               
-
-                                <div class="mb-3" style = "display: flex; justify-content: space-between;"> 
-                                    <div class="div">
-                                        <label for="venue_img" class="form-label">Venue Image</label>
-                                        <input type="file" class="form-control" id="venue_img" name="venue_img" accept="image/*" required style = "width: 215px;">
-                                    </div>
-                                    <div class="div">
-                                            <label for="schedule" class="form-label">Game Schedule</label>
-                                            <input type="datetime-local" class="form-control" id="schedule" name="schedule" required style = "width: 215px;">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-success">Save Schedule</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+      
 
 
           <div class="card" style = "margin-top: 20px;">
@@ -251,7 +219,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 $searchTerm = isset($_POST['search']) ? $_POST['search'] : '';
                                   $uniqueId = $_SESSION['id'];
-                                  $sqlSelectAllEventBasedOnAdmin = "SELECT * FROM event WHERE admin_id = $uniqueId AND status = 'score' AND (game_type LIKE '%$searchTerm%' OR team1_name LIKE '%$searchTerm%' OR team2_name LIKE '%$searchTerm%')";
+                                  $sqlSelectAllEventBasedOnAdmin = "SELECT * FROM event WHERE status = 'score'";
                                   $querySelectAllEventBasedOnAdmin = mysqli_query($conn, $sqlSelectAllEventBasedOnAdmin);
 
                                   if (mysqli_num_rows($querySelectAllEventBasedOnAdmin) > 0) {
@@ -280,15 +248,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                   </div>
                                                   <div class="card-body p-1">
                                                       <p style="color: grey; font-weight: bolder; font-size: 15px; margin-top: 10px;"><?php echo $getResult['game_type']; ?></p>
-                                                      <p style="color: grey; font-weight: bolder; font-size: 13px; margin-top: -15px;"><?php echo $getResult['team1_name']; ?> <span style="color: orange; font-size: 16px;">VS</span> <?php echo $getResult['team2_name']; ?></p>
+                                                      <p style="color: grey; font-weight: bolder; font-size: 13px; margin-top: -15px;"><?php 
+                                                      if($getResult['team1_score'] > $getResult['team2_score']){
+                                                        $sta = "( <span style = 'color: green;'>W</span> ) ";
+                                                      }else{
+                                                        $sta = "( <span style = 'color: red;'>L</span> ) ";
+                                                      }
+                                                      echo $sta.$getResult['team1_name']; ?> <span style="color: orange; font-size: 16px;">VS</span> <?php 
+                                                      if($getResult['team2_score'] > $getResult['team1_score']){
+                                                        $sta = " ( <span style = 'color: green;'>W</span> )";
+                                                      }else{
+                                                        $sta = " ( <span style = 'color: red;'>L</span> )";
+                                                      }
+                                                      echo $getResult['team2_name'].$sta;
+                                                     
+                                                      ?>
+                                                        
+                                                    </p>
                                                       
                                                       <div class="d-flex align-items-center gap-2">
-                                                          <button type="button" class="btn btn-outline-primary" style="width: 130px;" data-bs-toggle="modal" data-bs-target="#scoreModal-<?php echo $getResult['id']; ?>">
+                                                          <button type="button" class="btn btn-outline-primary" style="width: 100%" data-bs-toggle="modal" data-bs-target="#scoreModal-<?php echo $getResult['id']; ?>">
                                                               View
                                                           </button>
-                                                          <button type="button" class="btn btn-outline-danger" style="width: 130px;" data-bs-toggle="modal" data-bs-target="#deleteModal-<?php echo $getResult['id']; ?>">
+                                                          <!-- <button type="button" class="btn btn-outline-danger" style="width: 130px;" data-bs-toggle="modal" data-bs-target="#deleteModal-<?php echo $getResult['id']; ?>">
                                                               Delete
-                                                          </button>
+                                                          </button> -->
                                                       </div>
                                                   </div>
                                               </div>
@@ -314,7 +298,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                                   <input type="number" class="form-control" id="score_team2_<?php echo $getResult['id']; ?>" value="<?php echo $getResult['team2_score']; ?>" name="score_team2" required disabled>
                                                               </div>
                                                               <div class="modal-footer">
-                                                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                                                               </div>
                                                           </form>
                                                       </div>
@@ -348,10 +332,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                       }
                                   } else {
                               ?>
-                                            <div class="col-12" style="background-color: red; color: white; padding: 20px; border-radius: 10px; text-align: center;">
-                                                <h4 style="color: white;">There are no available events or games.</h4>
-                                                <p>Please check back later or score a game in the " Score Event " selection in the sidebar.</p>
-                                            </div>
+                                         
+
+                                            <div class="col-12" style="background-color: #FF4545; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                              <div class="col-12" style="background-color: red; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                                  <h4 style="color: white;">There are no available events or games.</h4>
+                                                  <p>Please check back later or score a game in the " Score Event " selection in the sidebar.</p>
+                                              </div>
+
+                                              </div>
                               <?php
                                   }
                               ?>

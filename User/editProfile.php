@@ -166,21 +166,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </a>
             </li>
             <li class="sidebar-item">
-                <a class="sidebar-link <?php echo $activePage == 'event' ? 'active' : ''; ?>" href="event.php" aria-expanded="false">
-                    <span>
+              <a class="sidebar-link <?php echo $activePage == 'event' ? 'active' : ''; ?>" href="event.php" aria-expanded="false">
+                  <span>
+                      <iconify-icon icon="mdi:calendar-plus" class="fs-6"></iconify-icon>
+                  </span>
+                  <span class="hide-menu">Scored Events</span>
+              </a>
+          </li>
+          <li class="sidebar-item">
+              <a class="sidebar-link <?php echo $activePage == 'score' ? 'active' : ''; ?>" href="score.php" aria-expanded="false">
+              <span>
                         <iconify-icon icon="mdi:calendar" class="fs-6"></iconify-icon>
                     </span>
-                    <span class="hide-menu">My Events</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link <?php echo $activePage == 'score' ? 'active' : ''; ?>" href="score.php" aria-expanded="false">
-                        <span>
-                            <iconify-icon icon="mdi:trophy" class="fs-6"></iconify-icon>
-                        </span>
-                        <span class="hide-menu">Score Events</span>
-                    </a>
-                </li>
+                  <span class="hide-menu">Events Schedule</span>
+              </a>
+          </li>
 
           </ul>
        

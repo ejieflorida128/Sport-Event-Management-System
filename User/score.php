@@ -6,30 +6,23 @@ $activePage = 'score';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $match_id = $_POST['match_id']; 
   if (isset($_POST['action'])) {
-      if ($_POST['action'] === 'score') {
-          $score_team1 = $_POST['score_team1'];
-          $score_team2 = $_POST['score_team2'];
+      if ($_POST['action'] === 'report') {
+          $report = $_POST['report'];
+         
 
 
 
-            $sqlUpdateScore = "UPDATE event SET team1_score = '$score_team1', team2_score = '$score_team2',status = 'score' WHERE id  = $match_id";
+            $sqlUpdateScore = "UPDATE event SET status = 'report' WHERE id  = $match_id";
             mysqli_query($conn,$sqlUpdateScore);
+
+            $sqlInsert = "INSERT INTO report (event_report_id,message) VALUES ('$match_id','$report')";
+            mysqli_query($conn,$sqlInsert);
 
             header("Location: score.php");
 
 
        
-      } elseif ($_POST['action'] === 'edit') {
-          $edit_team1_name = $_POST['edit_team1_name'];
-          $edit_team2_name = $_POST['edit_team2_name'];
-          $edit_schedule = $_POST['edit_schedule'];
-
-          $sqlUpdateInfo = "UPDATE event SET team1_name = '$edit_team1_name', team2_name = '$edit_team2_name', schedule = 'edit_schedule' WHERE id  = $match_id";
-          mysqli_query($conn,$sqlUpdateInfo);
-
-          header("Location: score.php");
-        
-      }
+      } 
   }
 }
 
@@ -111,21 +104,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </a>
             </li>
             <li class="sidebar-item">
-                <a class="sidebar-link <?php echo $activePage == 'event' ? 'active' : ''; ?>" href="event.php" aria-expanded="false">
-                    <span>
+              <a class="sidebar-link <?php echo $activePage == 'event' ? 'active' : ''; ?>" href="event.php" aria-expanded="false">
+                  <span>
+                      <iconify-icon icon="mdi:calendar-plus" class="fs-6"></iconify-icon>
+                  </span>
+                  <span class="hide-menu">Scored Events</span>
+              </a>
+          </li>
+          <li class="sidebar-item">
+              <a class="sidebar-link <?php echo $activePage == 'score' ? 'active' : ''; ?>" href="score.php" aria-expanded="false">
+              <span>
                         <iconify-icon icon="mdi:calendar" class="fs-6"></iconify-icon>
                     </span>
-                    <span class="hide-menu">My Events</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link <?php echo $activePage == 'score' ? 'active' : ''; ?>" href="score.php" aria-expanded="false">
-                        <span>
-                            <iconify-icon icon="mdi:trophy" class="fs-6"></iconify-icon>
-                        </span>
-                        <span class="hide-menu">Score Events</span>
-                    </a>
-                </li>
+                  <span class="hide-menu">Events Schedule</span>
+              </a>
+          </li>
           </ul>
        
         </nav>
@@ -143,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <i class="ti ti-menu-2"></i>
               </a>
             </li>
-            <h2 class="dashboard-title">SCORE EVENTS</h2>
+            <h2 class="dashboard-title">EVENT SCHEDULES</h2>
 
             <style>
             .dashboard-title {
@@ -203,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="row">
                                       <?php
                                           $uniqueId = $_SESSION['id'];
-                                          $sqlSelectAllEventBasedOnAdmin = "SELECT * FROM event WHERE admin_id = $uniqueId AND status = 'game'";
+                                          $sqlSelectAllEventBasedOnAdmin = "SELECT * FROM event WHERE status = 'game'";
                                           $querySelectAllEventBasedOnAdmin = mysqli_query($conn, $sqlSelectAllEventBasedOnAdmin);
 
                                           if (mysqli_num_rows($querySelectAllEventBasedOnAdmin) > 0) {
@@ -235,12 +228,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                               <p style="color: grey; font-weight: bolder; font-size: 13px; margin-top: -15px;"><?php echo $getResult['team1_name']; ?> <span style="color: orange; font-size: 16px;">VS</span> <?php echo $getResult['team2_name']; ?></p>
                                                               
                                                               <div class="d-flex align-items-center gap-2">
-                                                                  <button type="button" class="btn btn-outline-primary" style="width: 130px;" data-bs-toggle="modal" data-bs-target="#scoreModal-<?php echo $getResult['id']; ?>">
-                                                                      Score
+                                                                  <button type="button" class="btn btn-outline-danger" style="width: 100%;" data-bs-toggle="modal" data-bs-target="#scoreModal-<?php echo $getResult['id']; ?>">
+                                                                  Flag for Verification
                                                                   </button>
-                                                                  <button type="button" class="btn btn-outline-primary" style="width: 130px;" data-bs-toggle="modal" data-bs-target="#editModal-<?php echo $getResult['id']; ?>">
+                                                                  <!-- <button type="button" class="btn btn-outline-primary" style="width: 130px;" data-bs-toggle="modal" data-bs-target="#editModal-<?php echo $getResult['id']; ?>">
                                                                       Edit
-                                                                  </button>
+                                                                  </button> -->
                                                               </div>
                                                           </div>
                                                       </div>
@@ -258,16 +251,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                                   <form id="scoreForm-<?php echo $getResult['id']; ?>" action="score.php" method="post">
                                                                       <input type="hidden" name="match_id" value="<?php echo $getResult['id']; ?>">
                                                                       <div class="mb-3">
-                                                                          <label for="score_team1_<?php echo $getResult['id']; ?>" class="form-label">Team 1 Score</label>
-                                                                          <input type="number" class="form-control" id="score_team1_<?php echo $getResult['id']; ?>" value="<?php echo $getResult['team1_score']; ?>" name="score_team1" required>
-                                                                      </div>
-                                                                      <div class="mb-3">
-                                                                          <label for="score_team2_<?php echo $getResult['id']; ?>" class="form-label">Team 2 Score</label>
-                                                                          <input type="number" class="form-control" id="score_team2_<?php echo $getResult['id']; ?>" value="<?php echo $getResult['team2_score']; ?>" name="score_team2" required>
-                                                                      </div>
+                                                                        <label for="score_team1_<?php echo $getResult['id']; ?>" class="form-label">Report</label>
+                                                                        <textarea class="form-control" id="score_team1_<?php echo $getResult['id']; ?>" name="report" rows="3" required style = "color: grey; "></textarea>
+                                                                    </div>
+
+                                                                     
                                                                       <div class="modal-footer">
                                                                           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                                                                          <button type="submit" class="btn btn-success" name="action" value="score">Confirm Score</button>
+                                                                          <button type="submit" class="btn btn-success" name="action" value="report">Submit Report</button>
                                                                       </div>
                                                                   </form>
                                                               </div>
