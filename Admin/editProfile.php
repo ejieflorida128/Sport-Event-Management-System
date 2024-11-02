@@ -3,6 +3,43 @@ session_start();
 include("../conn.php");
 $activePage = 'profile'; 
 
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  
+    $fullname = $_POST['fullname'];
+    $gmail = $_POST['gmail'];
+    $password = $_POST['password'];
+    $number = $_POST['number'];
+    $address = $_POST['address'];
+
+   
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] == 0) {
+        $targetDir = "../profile_pictures/";
+        $fileName = basename($_FILES["profile_picture"]["name"]);
+        $targetFilePath = $targetDir . $fileName;
+        move_uploaded_file($_FILES["profile_picture"]["tmp_name"], $targetFilePath);
+        
+      
+        $_SESSION['profile_picture'] = $targetFilePath;
+    }
+
+
+    $_SESSION['fullname'] = $fullname;
+    $_SESSION['gmail'] = $gmail;
+    $_SESSION['password'] = $password;
+    $_SESSION['number'] = $number;
+    $_SESSION['address'] = $address;
+  
+
+    $sql = "UPDATE accounts SET fullname=?, gmail=?, password=?, number=?, address=?, profile_picture=? WHERE id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssssi", $fullname, $gmail, $password, $number, $address, $_SESSION['profile_picture'], $_SESSION['id']);
+    $stmt->execute();
+    
+    header("Location: profile.php");
+    exit();
+}
+
 ?>
 
 <!doctype html>
@@ -233,130 +270,129 @@ $activePage = 'profile';
             <div class="card-body">
                     <!-- start -->
                     <div class="container">
-    <div class="main-body">
-    
-         
-    
-          <div class="row gutters-sm" style = " font-weight: bolder;">
-            <div class="col-md-4 mb-3">
-              <div class="card">
-                <div class="card-body">
-                  <div class="d-flex flex-column align-items-center text-center">
-                  <img id="profileImagePreview" src="<?php echo $_SESSION['profile_picture']; ?>" alt="Admin"  style = "height: 150px; width: 150px; border-radius: 50%;">
-                    <div class="mt-3">
-                      <h4>  <?php echo $_SESSION['fullname'];  ?></h4>
-                      <p class="text-secondary mb-1">  <?php echo $_SESSION['gmail'];  ?></p>
-                    
-                      <div style = "margin-top: 20px;">
-                      <a href = "editProfile.php" class = "btn btn-success">Edit</a>
+                    <H3 style = "color: grey; font-weight: bolder;"> Edit Profile</H3>
+                    <form action="editProfile.php" method = "post" enctype="multipart/form-data">
+                    <div class="main-body">                       
+                            <div class="row gutters-sm">
+                            <div class="col-md-4 mb-3">
+                            <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex flex-column align-items-center text-center">
+                                     
+                                        <img id="profileImagePreview" src="<?php echo $_SESSION['profile_picture']; ?>" alt="Admin"  style = "height: 150px; width: 150px; border-radius: 50%;">
+                                        <div class="mt-3">
+                                            <h4><?php echo $_SESSION['fullname']; ?></h4>
+                                            <p class="text-secondary mb-1"><?php echo $_SESSION['gmail']; ?></p>
+                                            
+                                           
+                                            <div style="margin-top: 20px;">
+                                            <label class="btn btn-primary" for="profile_picture">
+                                                <i class="fa fa-pencil-alt"></i>
+                                            </label>
+                                            <input type="file" name="profile_picture" id="profile_picture" hidden onchange="previewProfileImage(event)">
+                                            <input type="submit" value="Submit Changes" class="btn btn-success">
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
 
-                     
-                      <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                      Delete Account
-                    </button>
+                                    <script>
+                                    function previewProfileImage(event) {
+                                        const file = event.target.files[0];
+                                        if (file) {
+                                        const reader = new FileReader();
+                                        reader.onload = function(e) {
+                                            document.getElementById('profileImagePreview').src = e.target.result;
+                                        };
+                                        reader.readAsDataURL(file);
+                                        }
+                                    }
+                                    </script>
 
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style = "margin-top: 10%;">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Deletion</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body">
-                                Are you sure you want do delete this account?
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                                  <a href="deleteProfile.php" class = "btn btn-success">Confirm Delete</a>
-                              </div>
+                            
                             </div>
-                          </div>
+                            <div class="col-md-8">
+                                <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Full Name</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                        <input type="text" name = "fullname" value = "<?php echo $_SESSION['fullname'];  ?>" class = "form-control">
+                                    </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Gmail</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                    <input type="text" name = "gmail" value = "<?php echo $_SESSION['gmail'];?>" class = "form-control">
+                                   
+                                    </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Password</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                    <input type="text" name = "password" value = "<?php echo $_SESSION['password'];?>" class = "form-control">
+                                 
+                                    </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Mobile Number</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                    <?php  
+                                            if(empty($_SESSION['number'])) {
+                                                echo '<input type="text" name="number" value="no information provided!" class="form-control">';
+                                            } else {
+                                              
+                                                echo '<input type="text" name="number" value="' . $_SESSION['number'] . '" class="form-control">';
+                                            }
+                                            ?>
+                                    </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Address</h6>
+                                    </div>
+                                    <div class="col-sm-9 text-secondary">
+                                    <?php  
+                                        if(empty($_SESSION['address'])) {
+                                            echo '<textarea name="address" class="form-control">no information provided!</textarea>';
+                                        } else {
+                                            
+                                            echo '<textarea name="address" class="form-control">' . htmlspecialchars($_SESSION['address']) . '</textarea>';
+                                        }
+                                        ?>
+
+                                    </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                    
+                                    </div>
+                                </div>
+                                </div>
+
+                            
+
+
+
+                            </div>
+                            </div>
+
                         </div>
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          
-            </div>
-            <div class="col-md-8">
-              <div class="card mb-3">
-                <div class="card-body" style = " font-weight: bolder;">
-                  <div class="row" >
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Full Name</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                        <?php echo $_SESSION['fullname'];  ?>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Gmail</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                    <?php echo $_SESSION['gmail'];  ?>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Password</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                    <?php echo $_SESSION['password'];  ?>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Mobile No.</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                    <?php  if(empty($_SESSION['number'])){
-                              echo 'no information provided!';
-                    }else{
-                   
-                        echo $_SESSION['number'];
-                    }
-                    
-                    ?>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h6 class="mb-0">Address</h6>
-                    </div>
-                    <div class="col-sm-9 text-secondary">
-                    <?php  if(empty($_SESSION['address'] )){
-                            echo 'no information provided!';
-                    }else{
-                     
-                        echo $_SESSION['address'];
-                    }
-                    
-                    ?>  
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                  
-                  </div>
-                </div>
-              </div>
-
-            
-
-
-
-            </div>
-          </div>
-
-        </div>
-    </div>
+                        </div>
+                    </form>
             </div>
                     <!-- end -->
             </div>
