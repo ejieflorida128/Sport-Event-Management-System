@@ -1,7 +1,7 @@
 <?php
 session_start(); 
 include("../conn.php");
-$activePage = 'dashboard'; 
+$activePage = 'profile'; 
 
 
 
@@ -37,12 +37,12 @@ $activePage = 'dashboard';
 </head>
 
 <body>
-
+  
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
     data-sidebar-position="fixed" data-header-position="fixed">
     
     <aside class="left-sidebar">
-      
+    
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
                 <a href="dashboard.php" class="text-nowrap logo-img">
@@ -181,82 +181,16 @@ $activePage = 'dashboard';
  
       <div class="container-fluid">
         <div class="row">
-          
-        <div class="col-lg-4">
-          <div class="card">
-            <div class="card-body text-center">
-              <img src="template/src/assets/images/backgrounds/1.avif" alt="image" class="img-fluid" width="205">
-              <h4 class="mt-7">Event Management Tips!</h4>
-                <p class="card-subtitle mt-2 mb-3">Maximize your productivity and stay organized with these essential tips for managing sports events.</p>
-                <button class="btn btn-primary mb-3">View Event Schedules</button>
-
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-8">
+        <div class="col-lg-12">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Information Box</h5>
-              
-              <div class="container">
-                <div class="row">
-                    <div class="con1">Content 1</div>
-                    <div class="con2">Content 2</div>
-                    <div class="con3">Content 3</div>
-                </div>
-                <div class="row">
-                    <div class="con1">Content 4</div>
-                    <div class="con2">Content 5</div>
-                    <div class="con3">Content 6</div>
-                </div>
-            </div>
+                    <!-- start -->
 
-            <style>
-            
-
-              
-
-                .container {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .row {
-                    display: flex;
-                    justify-content: space-between;
-                    margin-bottom: 20px;
-                }
-
-                .row > div {
-                    flex: 1; 
-                    margin: 0 10px; 
-                    padding: 20px;
-                    background-color: #f0f0f0;
-                    border: 1px solid #ccc;
-                    border-radius: 8px;
-                    text-align: center;
-                }
-
-                /* Responsive Design */
-                @media (max-width: 768px) {
-                    .row {
-                        flex-direction: column; 
-                    }
-
-                    .row > div {
-                        margin: 10px 0; 
-                    }
-                }
-
-            </style>
+                    <!-- end -->
             </div>
           </div>
         </div>
   
-      
-     
-     
-       
       </div>
     </div>
   </div>
