@@ -138,7 +138,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-between mb-4" style="position: absolute; right: 28px;">
-                            <a class="text-primary fw-bold" href="./index.html">Forgot Password?</a>
+                            <a class="text-primary fw-bold" href="forgot_password.php">Forgot Password?</a>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary w-100 py-2 fs-4 mb-4">Sign In</button>
